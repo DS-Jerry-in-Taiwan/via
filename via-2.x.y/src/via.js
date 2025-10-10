@@ -10156,3 +10156,76 @@ function polygon_to_bbox(pts) {
   }
   return [xmin, ymin, xmax-xmin, ymax-ymin];
 }
+
+function print_roi_metadata() {
+  // 呼叫 pack_via_metadata 並取得 JSON 格式的 ROI metadata
+  pack_via_metadata('json').then(function(data) {
+    // data 是一個陣列，通常只有一個 JSON 字串
+    var jsonStr = Array.isArray(data) ? data[0] : data;
+
+    // 打印原始 JSON 字串
+    console.log('原始 ROI metadata JSON:', jsonStr);
+
+    // 嘗試解析 JSON 並打印物件
+    try {
+      var roiData = JSON.parse(jsonStr);
+      console.log('解析後的 ROI metadata:', roiData);
+    } catch (e) {
+      console.error('解析 ROI metadata JSON 失敗:', e);
+    }
+  }).catch(function(error) {
+    console.error('無法取得 ROI metadata:', error);
+  });
+}
+
+
+
+function post_roi_to_agent() {
+  pack_via_metadata('json')
+    .then(function(data) {
+      // 確保 data 是字串格式
+      var jsonStr = Array.isArray(data) ? data[0] : data;
+      var roiData;
+
+      try {
+        // 嘗試解析 JSON
+        roiData = JSON.parse(jsonStr);
+      } catch (e) {
+        // 如果解析失敗，顯示錯誤訊息
+        show_message("Cannot parse ROI metadata JSON", e);
+        return;
+      }
+
+      // 定義後端 API 的 URL
+      var url = 'http://127.0.0.1:5000/api/receive';
+
+      // 發送 POST 請求
+      fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(roiData)
+      })
+        .then(response => {
+          // 檢查回應是否成功
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(result => {
+          // 成功處理回應
+          show_message("SUCCESS POST ROI DATA", result);
+          console.log('Success:', result);
+        })
+        .catch(error => {
+          // 處理錯誤
+          show_message("ERROR POST ROI DATA", error);
+          console.error('Error:', error);
+        });
+    })
+    .catch(error => {
+      // 處理 pack_via_metadata 的錯誤
+      show_message("ERROR PACKING METADATA", error);
+      console.error('Error:', error);
+    });
+}
