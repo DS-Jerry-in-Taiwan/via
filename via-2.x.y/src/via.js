@@ -372,6 +372,37 @@ function _via_init() {
     }, 100);
   }
 
+  // 新增：頁面初始化時自動取得 screenshot_url
+  const queryParams = getQueryParams();
+  const screenshotUrl = queryParams.screenshot_url;
+  if (screenshotUrl) {
+    // 驗證 URL 是否有效且為圖片格式
+    if (isValidImageUrl(screenshotUrl)) {
+      console.log('取得的 screenshot_url:', screenshotUrl);
+      
+      // 顯示載入訊息
+      show_message('載入截圖中...', 2 * VIA_THEME_MESSAGE_TIMEOUT_MS);
+      
+      // 使用 VIA 的內建函數從 URL 加入圖片到專案
+      var img_id = project_file_add_url(screenshotUrl);
+      
+      // 取得新加入圖片的索引，並手動顯示圖片
+      var img_index = _via_image_id_list.indexOf(img_id);
+      if (img_index !== -1) {
+        _via_show_img(img_index);  // 觸發載入和渲染
+        show_message('截圖載入成功！', VIA_THEME_MESSAGE_TIMEOUT_MS);
+      } else {
+        show_message('無法找到新加入圖片的索引', VIA_THEME_MESSAGE_TIMEOUT_MS);
+      }
+    } else {
+      console.warn('無效的 screenshot_url 參數');
+      show_message('提供的截圖 URL 無效或不支援，請檢查 URL 格式', 3 * VIA_THEME_MESSAGE_TIMEOUT_MS);
+    }
+  } else {
+    // TODO: 處理未帶入參數的情境
+    console.warn('未取得 screenshot_url 參數');
+  }
+
 }
 
 function _via_init_reg_canvas_context() {
@@ -10155,4 +10186,110 @@ function polygon_to_bbox(pts) {
     }
   }
   return [xmin, ymin, xmax-xmin, ymax-ymin];
+}
+
+// 新增：打印 ROI metadata 的函數
+function print_roi_metadata() {
+  // 呼叫 pack_via_metadata 並取得 JSON 格式的 ROI metadata
+  pack_via_metadata('json').then(function(data) {
+    // data 是一個陣列，通常只有一個 JSON 字串
+    var jsonStr = Array.isArray(data) ? data[0] : data;
+
+    // 打印原始 JSON 字串
+    console.log('原始 ROI metadata JSON:', jsonStr);
+
+    // 嘗試解析 JSON 並打印物件
+    try {
+      var roiData = JSON.parse(jsonStr);
+      console.log('解析後的 ROI metadata:', roiData);
+    } catch (e) {
+      console.error('解析 ROI metadata JSON 失敗:', e);
+    }
+  }).catch(function(error) {
+    console.error('無法取得 ROI metadata:', error);
+  });
+}
+
+// 新增：將 ROI metadata POST 到後端 API 的函數
+function post_roi_to_agent() {
+  pack_via_metadata('json')
+    .then(function(data) {
+      // 確保 data 是字串格式
+      var jsonStr = Array.isArray(data) ? data[0] : data;
+      var roiData;
+
+      try {
+        // 嘗試解析 JSON
+        roiData = JSON.parse(jsonStr);
+      } catch (e) {
+        // 如果解析失敗，顯示錯誤訊息
+        show_message("Cannot parse ROI metadata JSON", e);
+        return;
+      }
+
+      // 定義後端 API 的 URL
+      var url = 'http://127.0.0.1:5000/api/receive';
+
+      // 發送 POST 請求
+      fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(roiData)
+      })
+        .then(response => {
+          // 檢查回應是否成功
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(result => {
+          // 成功處理回應
+          show_message("SUCCESS POST ROI DATA", result);
+          console.log('Success:', result);
+        })
+        .catch(error => {
+          // 處理錯誤
+          show_message("ERROR POST ROI DATA", error);
+          console.error('Error:', error);
+        });
+    })
+    .catch(error => {
+      // 處理 pack_via_metadata 的錯誤
+      show_message("ERROR PACKING METADATA", error);
+      console.error('Error:', error);
+    });
+}
+
+// 新增：解析 URL query string 的函數
+function getQueryParams() {
+  const params = {};
+  const queryString = window.location.search.substring(1);
+  if (!queryString) return params;
+  const pairs = queryString.split("&");
+  for (let pair of pairs) {
+    const [key, value] = pair.split("=");
+    params[decodeURIComponent(key)] = decodeURIComponent(value || "");
+  }
+  return params;
+}
+
+// 新增：驗證 URL 是否為有效圖片 URL 的函數
+function isValidImageUrl(url) {
+  // 檢查是否為有效 URL
+  try {
+    new URL(url);
+  } catch (_) {
+    return false;
+  }
+  
+  // 檢查是否為支援的圖片格式（可擴充）
+  const supportedFormats = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'];
+  const lowerUrl = url.toLowerCase();
+  return supportedFormats.some(format => lowerUrl.includes(format));
+  
+  // 可選：限制網域（e.g., 只允許來自 example.com）
+  // const allowedDomains = ['example.com', 'trusted-site.com'];
+  // const urlObj = new URL(url);
+  // return allowedDomains.includes(urlObj.hostname);
 }
