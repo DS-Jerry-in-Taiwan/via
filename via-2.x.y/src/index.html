@@ -783,5 +783,20 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!-- DEMO SCRIPT AUTOMATICALLY INSERTED BY VIA PACKER SCRIPT -->
     <script src="via.js"></script>
+
+    <script>
+      // 頁面初始化時自動取得 screenshot_url
+      document.addEventListener('DOMContentLoaded', function() {
+        const queryParams = getQueryParams();  // 調用 via.js 中的函數
+        const screenshotUrl = queryParams.screenshot_url;
+        if (screenshotUrl) {
+          // TODO: 在這裡載入圖片或進行後續處理
+          console.log('取得的 screenshot_url:', screenshotUrl);
+        } else {
+          // TODO: 處理未帶入參數的情境
+          console.warn('未取得 screenshot_url 參數');
+        }
+      });
+    </script>
   </body>
 </html>
