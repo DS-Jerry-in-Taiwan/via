@@ -313,6 +313,10 @@ var VIA_FLOAT_PRECISION = 3; // number of decimal places to include in float val
 var VIA_COCO_EXPORT_RSHAPE = ['rect', 'circle', 'ellipse', 'polygon', 'point'];
 var VIA_COCO_EXPORT_ATTRIBUTE_TYPE = [VIA_ATTRIBUTE_TYPE.DROPDOWN,
                                       VIA_ATTRIBUTE_TYPE.RADIO];
+
+//全域變數，存放 roi-config-name
+var roiConfigName = "";
+
 //
 // Data structure to store metadata about file and regions
 //
@@ -375,6 +379,7 @@ function _via_init() {
   // 新增：頁面初始化時自動取得 screenshot_url
   const queryParams = getQueryParams();
   const screenshotUrl = queryParams.screenshot_url;
+  roiConfigName = queryParams['roi-config-name'] || ""; // 取得 roi-config-name 參數
   if (screenshotUrl) {
     // 驗證 URL 是否有效且為圖片格式
     if (isValidImageUrl(screenshotUrl)) {
@@ -10228,7 +10233,14 @@ function post_roi_to_agent() {
       }
 
       // 定義後端 API 的 URL
-      var url = 'http://127.0.0.1:5000/api/receive';
+      var url = 'http://localhost:8080/api/update_roi_config/';
+
+      if (roiConfigName) {
+        url += encodeURIComponent(roiConfigName);
+      } else {
+        show_message("ROI config name is not specified in URL query string.");
+        return;
+      }
 
       // 發送 POST 請求
       fetch(url, {
