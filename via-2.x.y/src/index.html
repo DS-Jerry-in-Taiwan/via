@@ -174,7 +174,7 @@
           <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path>
         </symbol>
         <symbol id="icon_postroi" viewBox="0 0 24 24">
-          <path d="M2 21l21-9-21-9v7l15 2-15 2z"/>
+          <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
         </symbol>
       </defs>
     </svg>
@@ -190,10 +190,11 @@
     <!-- spreadsheet like editor for annotations -->
     <div id="annotation_editor_panel">
       <div class="button_panel">
-        <span class="text_button" onclick="edit_region_metadata_in_annotation_editor()" id="button_edit_region_metadata" title="Manual annotations of regions">Region Annotations</span>
-        <span class="text_button" onclick="edit_file_metadata_in_annotation_editor()" id="button_edit_file_metadata" title="Manual annotations of a file">File Annotations</span>
-
-        <span class="button" style="float:right;margin-right:0.2rem;" onclick="annotation_editor_toggle_all_regions_editor()" title="Close this window of annotation editor">&times;</span>
+        <!-- <span class="text_button" onclick="edit_region_metadata_in_annotation_editor()" id="button_edit_region_metadata" title="Manual annotations of regions">Region Annotations</span> -->
+        <!-- <span class="text_button" onclick="edit_file_metadata_in_annotation_editor()" id="button_edit_file_metadata" title="Manual annotations of a file">File Annotations</span> -->
+        <span class="text_button" onclick="edit_region_metadata_in_annotation_editor()" id="button_edit_region_metadata" title="Manual annotations of regions">區域標籤</span>
+        <span class="text_button" onclick="edit_file_metadata_in_annotation_editor()" id="button_edit_file_metadata" title="Manual annotations of a file">檔案註解</span>
+        <!-- <span class="button" style="float:right;margin-right:0.2rem;" onclick="annotation_editor_toggle_all_regions_editor()" title="Close this window of annotation editor">&times;</span> -->
         <span class="button" style="float:right;margin-right:0.2rem;" onclick="annotation_editor_increase_panel_height()" title="Increase the height of this panel">&uarr;</span>
         <span class="button" style="float:right;margin-right:0.2rem;" onclick="annotation_editor_decrease_panel_height()" title="Decrease the height of this panel">&darr;</span>
         <span class="button" style="float:right;margin-right:0.2rem;" onclick="annotation_editor_increase_content_size()" title="Increase size of contents in annotation editor">&plus;</span>
@@ -206,7 +207,7 @@
       <!-- menu bar -->
       <div class="menubar">
         <ul>
-          <li onclick="show_home_panel()" style="cursor:pointer;">Home</li>
+          <!-- <li onclick="show_home_panel()" style="cursor:pointer;">Home</li>
           <li>Project
             <ul>
               <li onclick="project_open_select_project_file()" title="Load a VIA project (from a JSON file)">Load</li>
@@ -255,17 +256,17 @@
               <li onclick="toggle_region_id_visibility()" title="Show or hide the region id labels">Show/hide region labels (l)</li>
               <li onclick="toggle_region_info_visibility()" title="Show or hide the image coordinates">Show/hide region info.</li>
             </ul>
-          </li>
+          </li> -->
 
-          <li>Help
+          <li>幫助
             <ul>
-              <li onclick="set_display_area_content(VIA_DISPLAY_AREA_CONTENT_NAME.PAGE_GETTING_STARTED)" title="Show a guide to get started with this application">Getting Started</li>
+              <!-- <li onclick="set_display_area_content(VIA_DISPLAY_AREA_CONTENT_NAME.PAGE_GETTING_STARTED)" title="Show a guide to get started with this application">Getting Started</li>
               <li title="Visit the project page for this application"><a href="http://www.robots.ox.ac.uk/~vgg/software/via/" target="_blank">VGG Project Page</a></li>
-              <li onclick="" title="Report an issue to the developers of this application (requires an account at gitlab.com)"><a href="https://gitlab.com/vgg/via/issues" target="_blank">Report issues</a></li>
-              <li class="submenu_divider"></li>
-              <li><a target="_blank" href="https://gitlab.com/vgg/via/blob/master/Contributors.md" title="List of people who have contributed towards the development of VIA">Contributors</a></li>
+              <li onclick="" title="Report an issue to the developers of this application (requires an account at gitlab.com)"><a href="https://gitlab.com/vgg/via/issues" target="_blank">Report issues</a></li> -->
+              <!-- <li class="submenu_divider"></li> -->
+              <!-- <li><a target="_blank" href="https://gitlab.com/vgg/via/blob/master/Contributors.md" title="List of people who have contributed towards the development of VIA">Contributors</a></li> -->
               <li onclick="set_display_area_content(VIA_DISPLAY_AREA_CONTENT_NAME.PAGE_LICENSE)" title="View license of this application">License</li>
-              <li onclick="set_display_area_content(VIA_DISPLAY_AREA_CONTENT_NAME.PAGE_ABOUT)" title="Show more details about this application">About VIA</li>
+              <li onclick="set_display_area_content(VIA_DISPLAY_AREA_CONTENT_NAME.PAGE_ABOUT)" title="Show more details about this application">關於VIA</li>
             </ul>
           </li>
         </ul>
@@ -273,31 +274,40 @@
 
       <!-- Shortcut toolbar -->
       <div class="toolbar">
-        <svg onclick="project_open_select_project_file()" viewbox="0 0 24 24"><use xlink:href="#icon_open"></use><title>Open Project</title></svg>
-        <svg onclick="project_save_with_confirm()" viewbox="0 0 24 24"><use xlink:href="#icon_save"></use><title>Save Project</title></svg>
-        <svg onclick="settings_panel_toggle()" viewbox="0 0 24 24"><use xlink:href="#icon_settings"></use><title>Update Project Settings</title></svg>
+        <svg onclick="project_open_select_project_file()" viewbox="0 0 24 24" style="display:none;"><use xlink:href="#icon_open"></use><title>Open Project</title></svg>
+        <!-- <svg onclick="project_save_with_confirm()" viewbox="0 0 24 24" style="display:none;"><use xlink:href="#icon_save"></use><title>Save Project</title></svg> -->
+        <!-- <svg onclick="settings_panel_toggle()" viewbox="0 0 24 24"><use xlink:href="#icon_settings"></use><title>Update Project Settings</title></svg> -->
+        <!-- <svg onclick="settings_panel_toggle()" viewbox="0 0 24 24"><use xlink:href="#icon_settings"></use><title>更新設定</title></svg> -->
         <!--
         <svg onclick="" viewbox="0 0 24 24"><use xlink:href="#icon_checkbox"></use><title>Locate Files</title></svg>
         -->
-        <svg onclick="sel_local_data_file('annotations')" style="margin-left:1rem;" viewbox="0 0 24 24"><use xlink:href="#icon_fileupload"></use><title>Import Annotations from CSV</title></svg>
-        <svg onclick="download_all_region_data('csv')" viewbox="0 0 24 24"><use xlink:href="#icon_filedownload"></use><title>Download Annotations as CSV</title></svg>
-        <svg onclick="post_roi_to_agent()" viewBox="0 0 24 24"><use xlink:href="#icon_postroi"></use><title>Post ROI data to an agent</title></svg>
-        <svg onclick="image_grid_toggle()" id="toolbar_image_grid_toggle" style="margin-left:1rem;" viewbox="0 0 24 24"><use xlink:href="#icon_gridon"></use><title>Switch to Image Grid View</title></svg>
-        <svg onclick="annotation_editor_toggle_all_regions_editor()" viewbox="0 0 24 24"><use xlink:href="#icon_insertcomment"></use><title>Toggle Annotation Editor</title></svg>
+        <!-- <svg onclick="sel_local_data_file('annotations')" style="margin-left:1rem; display:none;" viewbox="0 0 24 24"><use xlink:href="#icon_fileupload"></use><title>Import Annotations from CSV</title></svg> -->
+        <!-- <svg onclick="download_all_region_data('csv')" viewbox="0 0 24 24" style="display:none;"><use xlink:href="#icon_filedownload"></use><title>Download Annotations as CSV</title></svg> -->
+        <svg onclick="post_roi_to_agent()" viewBox="0 0 24 24"><use xlink:href="#icon_postroi"></use><title>儲存ROI設定</title></svg>
+        <!-- <svg onclick="image_grid_toggle()" id="toolbar_image_grid_toggle" style="margin-left:1rem;" viewbox="0 0 24 24"><use xlink:href="#icon_gridon" style="display:none;"></use><title>Switch to Image Grid View</title></svg> -->
+        <!-- <svg onclick="annotation_editor_toggle_all_regions_editor()" viewbox="0 0 24 24"><use xlink:href="#icon_insertcomment" style="display:none;"></use><title>Toggle Annotation Editor</title></svg> -->
 
-        <svg onclick="move_to_prev_image()" style="margin-left:1rem;" viewbox="0 0 24 24"><use xlink:href="#icon_prev"></use><title>Previous</title></svg>
-        <svg onclick="toggle_img_fn_list_visibility()" viewbox="0 0 24 24"><use xlink:href="#icon_list"></use><title>Toggle Filename List</title></svg>
-        <svg onclick="move_to_next_image()" viewbox="0 0 24 24"><use xlink:href="#icon_next"></use><title>Next</title></svg>
+        <!-- <svg onclick="move_to_prev_image()" style="margin-left:1rem;" viewbox="0 0 24 24"><use xlink:href="#icon_prev"></use><title>Previous</title></svg> -->
+        <!-- <svg onclick="toggle_img_fn_list_visibility()" viewbox="0 0 24 24"><use xlink:href="#icon_list"></use><title>Toggle Filename List</title></svg> -->
+        <!-- <svg onclick="move_to_next_image()" viewbox="0 0 24 24"><use xlink:href="#icon_next"></use><title>Next</title></svg> -->
 
-        <svg onclick="zoom_in()" style="margin-left:1rem;" viewbox="0 0 24 24"><use xlink:href="#icon_zoomin"></use><title>Zoom In</title></svg>
-        <svg onclick="zoom_out()" viewbox="0 0 24 24"><use xlink:href="#icon_zoomout"></use><title>Zoom Out</title></svg>
+        <!-- <svg onclick="zoom_in()" style="margin-left:1rem;" viewbox="0 0 24 24"><use xlink:href="#icon_zoomin"></use><title>Zoom In</title></svg>
+        <svg onclick="zoom_out()" viewbox="0 0 24 24"><use xlink:href="#icon_zoomout"></use><title>Zoom Out</title></svg> -->
 
-        <svg onclick="sel_all_regions()" viewbox="0 0 24 24" style="margin-left:1rem;"><use xlink:href="#icon_selectall"></use><title>Select All Regions</title></svg>
+        <svg onclick="zoom_in()" style="margin-left:1rem;" viewbox="0 0 24 24"><use xlink:href="#icon_zoomin"></use><title>放大圖片</title></svg>
+        <svg onclick="zoom_out()" viewbox="0 0 24 24"><use xlink:href="#icon_zoomout"></use><title>縮小圖片</title></svg>
+
+        <!-- <svg onclick="sel_all_regions()" viewbox="0 0 24 24" style="margin-left:1rem;"><use xlink:href="#icon_selectall"></use><title>Select All Regions</title></svg>
         <svg onclick="copy_sel_regions()" viewbox="0 0 24 24"><use xlink:href="#icon_copy"></use><title>Copy Regions</title></svg>
         <svg onclick="paste_sel_regions_in_current_image()" viewbox="0 0 24 24"><use xlink:href="#icon_paste"></use><title>Paste Regions</title></svg>
         <svg onclick="paste_to_multiple_images_with_confirm()" viewbox="0 0 24 24"><use xlink:href="#icon_pasten"></use><title>Paste Region in Multiple Images</title></svg>
         <svg onclick="del_sel_regions_with_confirm()" viewbox="0 0 24 24"><use xlink:href="#icon_pasteundo"></use><title>Undo Regions Pasted in Multiple Images</title></svg>
-        <svg onclick="del_sel_regions()" viewbox="0 0 24 24"><use xlink:href="#icon_close"></use><title>Delete Region</title></svg>
+        <svg onclick="del_sel_regions()" viewbox="0 0 24 24"><use xlink:href="#icon_close"></use><title>Delete Region</title></svg> -->
+
+        <svg onclick="sel_all_regions()" viewbox="0 0 24 24" style="margin-left:1rem;"><use xlink:href="#icon_selectall"></use><title>選取所有區域</title></svg>
+        <svg onclick="copy_sel_regions()" viewbox="0 0 24 24"><use xlink:href="#icon_copy"></use><title>複製選取的區域</title></svg>
+        <svg onclick="paste_sel_regions_in_current_image()" viewbox="0 0 24 24"><use xlink:href="#icon_paste"></use><title>貼上選取的區域</title></svg>
+        <svg onclick="del_sel_regions()" viewbox="0 0 24 24"><use xlink:href="#icon_close"></use><title>刪除選取的區域</title></svg>
       </div>
       <!-- end of shortcut toolbar -->
       <input type="file" id="invisible_file_input" name="files[]" style="display:none">
@@ -317,7 +327,7 @@
           <span class="text_button" onclick="leftsidebar_toggle()" title="Show/hide this toolbar panel">&ltrif;</span>
         </div>
 
-        <button class="leftsidebar_accordion active">Region Shape</button>
+        <button class="leftsidebar_accordion active">區域編輯</button>
         <div class="leftsidebar_accordion_panel show">
           <ul class="region_shape">
             <li id="region_shape_rect" class="selected" onclick="select_region_shape('rect')" title="Rectangle (Shortcut key 1)"><svg height="32" viewbox="0 0 32 32"><use xlink:href="#shape_rectangle"></use></svg></li>
@@ -331,8 +341,8 @@
         </div>
 
         <!-- Project -->
-        <button class="leftsidebar_accordion active" id="project_panel_title">Project</button>
-        <div class="leftsidebar_accordion_panel show" id="img_fn_list_panel">
+        <button class="leftsidebar_accordion active" id="project_panel_title"  style="display:none;">Project</button>
+        <div class="leftsidebar_accordion_panel show" id="img_fn_list_panel"  style="display:none;">
           <div id="project_info_panel">
             <div class="row">
               <span class="col"><label for="project_name">Name: </label></span>
@@ -364,7 +374,7 @@
         </div>
 
         <!-- Attributes -->
-        <button class="leftsidebar_accordion" id="attributes_editor_panel_title">Attributes</button>
+        <button class="leftsidebar_accordion" id="attributes_editor_panel_title" style="display:none;">設定區域標籤</button>
         <div class="leftsidebar_accordion_panel" id="attributes_editor_panel">
           <div class="button_panel" style="padding:1rem 0;">
             <span class="text_button" onclick="show_region_attributes_update_panel()" id="button_show_region_attributes" title="Show region attributes">Region Attributes</span>
@@ -387,50 +397,50 @@
           </div>
         </div>
 
-        <button class="leftsidebar_accordion">Keyboard Shortcuts</button>
-        <div class="leftsidebar_accordion_panel">
+        <button class="leftsidebar_accordion" style="display:none;">快捷功能清單</button>
+        <div class="leftsidebar_accordion_panel" style="display:none;">
           <div style="display:block; text-align:center; padding:1rem;">Available only on image focus</div>
           <table>
             <tr>
               <td style="width:8em;"><span class="key">&larr;</span>&nbsp;<span class="key">&uarr;</span>&nbsp;<span class="key">&rarr;</span>&nbsp;<span class="key">&darr;</span></td>
-              <td>Move selected region by 1 px (Shift to jump)</td>
+              <td>移動選取區域（Shift 鍵可加速移動）</td>
             </tr>
             <tr>
               <td><span class="key">a</span></td>
-              <td>Select all regions</td>
+              <td>全選所有區域</td>
             </tr>
 
             <tr>
               <td><span class="key">c</span></td>
-              <td>Copy selected regions</td>
+              <td>複製選取的區域</td>
             </tr>
             <tr>
               <td><span class="key">v</span></td>
-              <td>Paste selected regions</td>
+              <td>貼上選取的區域</td>
             </tr>
             <tr>
               <td><span class="key">d</span></td>
-              <td>Delete selected regions</td>
+              <td>刪除選取的區域</td>
             </tr>
             <tr>
               <td><span class="key">Ctrl</span> + Wheel</td>
-              <td>Zoom in/out (mouse cursor is over image)</td>
+              <td>縮放影像（滑鼠游標需在影像上）</td>
             </tr>
             <tr>
               <td><span class="key">l</span></td>
-              <td>Toggle region label</td>
+              <td>切換區域標籤顯示</td>
             </tr>
             <tr>
               <td><span class="key">b</span></td>
-              <td>Toggle region boundary</td>
+              <td>切換區域邊界顯示</td>
             </tr>
             <tr>
               <td><span class="key">Enter</span></td>
-              <td>Finish drawing polyshape</td>
+              <td>切換區域邊界顯示</td>
             </tr>
             <tr>
               <td><span class="key">Backspace</span></td>
-              <td>Delete last polyshape vertex</td>
+              <td>刪除最後一個多邊形頂點</td>
             </tr>
           </table>
 
@@ -438,44 +448,44 @@
           <table>
             <tr>
               <td style="width:8em;"><span class="key">&larr;</span>&nbsp;<span class="key">&rarr;</span></td>
-              <td>Move to next/previous image</td>
+              <td>切換到上一張／下一張影像</td>
             </tr>
             <tr>
               <td><span class="key">+</span>&nbsp;<span class="key">-</span>&nbsp;<span class="key">=</span></td>
-              <td>Zoom in/out/reset</td>
+              <td>縮放影像（滑鼠游標需在影像上）</td>
             </tr>
             <tr>
               <td><span class="key">&uarr;</span></td>
-              <td>Update region label</td>
+              <td>更新區域標籤</td>
             </tr>
             <tr>
               <td><span class="key">&darr;</span></td>
-              <td>Update region colour</td>
+              <td>更新區域顏色</td>
             </tr>
             <tr>
               <td><span class="key">Spacebar</span></td>
-              <td>Toggle annotation editor (Ctrl to toggle on image editor)</td>
+              <td>切換註解編輯器（Ctrl 鍵可切換到影像編輯器）</td>
             </tr>
             <tr>
               <td><span class="key">Home</span> / <span class="key">h</span></td>
-              <td>Jump to first image</td>
+              <td>跳到第一張影像</td>
             </tr>
             <tr>
               <td><span class="key">End</span> / <span class="key">e</span></td>
-              <td>Jump to last image</td>
+              <td>跳到最後一張影像</td>
             </tr>
             <tr>
               <td><span class="key">PgUp</span> / <span class="key">u</span></td>
-              <td>Jump several images</td>
+              <td>向前挑選影像</td>
             </tr>
             <tr>
               <td><span class="key">PgDown</span> / <span class="key">d</span></td>
-              <td>Jump several images</td>
+              <td>向後挑選影像</td>
             </tr>
 
             <tr>
               <td><span class="key">Esc</span></td>
-              <td>Cancel ongoing task</td>
+              <td>取消正在進行的任務</td>
             </tr>
           </table>
         </div>
@@ -637,10 +647,10 @@
 
         <div id="page_start_info" class="display_area_content display_none narrow_page_content">
           <ul>
-            <li>To start annotation, <span class="text_button" title="Load or Add Images" onclick="sel_local_images()">select images</span> (or, add images from <span class="text_button" title="Add images from a web URL (e.g. http://www.robots.ox.ac.uk/~vgg/software/via/images/swan.jpg)" onclick="project_file_add_url_with_input()">URL</span> or <span class="text_button" title="Add images using absolute path of file (e.g. /home/abhishek/image1.jpg)" onclick="project_file_add_abs_path_with_input()">absolute path</span>) and draw regions</li>
-            <li>Use <span class="text_button" title="Toggle attributes editor panel" onclick="toggle_attributes_editor()">attribute editor</span> to define attributes (e.g. name) and <span class="text_button" title="Toggle annotations editor panel" onclick="annotation_editor_toggle_all_regions_editor()">annotation editor</span> to describe each region (e.g. cat) using these attributes.</li>
-            <li>Remember to <span class="text_button" onclick="project_save_with_confirm()">save</span> your project before closing this application so that you can <span class="text_button" onclick="project_open_select_project_file()">load</span> it later to continue annotation.</li>
-            <li>For help, see the <span class="text_button" onclick="set_display_area_content(VIA_DISPLAY_AREA_CONTENT_NAME.PAGE_GETTING_STARTED)">Getting Started</span> page and pre-loaded demo: <a href="http://www.robots.ox.ac.uk/~vgg/software/via/via_demo.html">image annotation</a> and <a href="http://www.robots.ox.ac.uk/~vgg/software/via/via_face_demo.html">face annotation</a>.</li>
+            <li>開始標註前，請先, <span class="text_button" title="Load or Add Images" onclick="sel_local_images()">選擇圖片</span> (或從 <span class="text_button" title="Add images from a web URL (e.g. http://www.robots.ox.ac.uk/~vgg/software/via/images/swan.jpg)" onclick="project_file_add_url_with_input()">URL</span> 或 <span class="text_button" title="Add images using absolute path of file (e.g. /home/abhishek/image1.jpg)" onclick="project_file_add_abs_path_with_input()">absolute path</span>) 並繪製區域</li>
+            <li>使用 <span class="text_button" title="Toggle attributes editor panel" onclick="toggle_attributes_editor()">屬性編輯器</span> 定義屬性 (例如名稱) 並使用這些屬性描述每個區域 (例如貓) 的 <span class="text_button" title="Toggle annotations editor panel" onclick="annotation_editor_toggle_all_regions_editor()">註釋編輯器</span>。</li>
+            <li>記得在關閉應用程式之前，先 <span class="text_button" onclick="project_save_with_confirm()">儲存</span> 專案，以便稍後可以 <span class="text_button" onclick="project_open_select_project_file()">載入</span> 它以繼續註釋。</li>
+            <li>如需幫助，請參閱 <span class="text_button" onclick="set_display_area_content(VIA_DISPLAY_AREA_CONTENT_NAME.PAGE_GETTING_STARTED)">開始使用</span> 頁面和預載入的示範： <a href="http://www.robots.ox.ac.uk/~vgg/software/via/via_demo.html">圖像註釋</a> 和 <a href="http://www.robots.ox.ac.uk/~vgg/software/via/via_face_demo.html">人臉註釋</a>。</li>
           </ul>
 
         </div>

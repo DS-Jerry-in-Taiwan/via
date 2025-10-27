@@ -256,7 +256,7 @@ var _via_preload_img_promise_list   = [];
 // via settings
 var _via_settings = {};
 _via_settings.ui  = {};
-_via_settings.ui.annotation_editor_height   = 25; // in percent of the height of browser window
+_via_settings.ui.annotation_editor_height   = 20; // in percent of the height of browser window
 _via_settings.ui.annotation_editor_fontsize = 0.8;// in rem
 _via_settings.ui.leftsidebar_width          = 18;  // in rem
 
@@ -351,6 +351,30 @@ function _via_init() {
   // initialize default project
   project_init_default_project();
 
+  // initialize default attributes if not already present
+  if (typeof _via_attributes === 'undefined') {
+      _via_attributes = { region: {}, file: {} };
+    }
+    if (!_via_attributes.region) {
+      _via_attributes.region = {};
+    }
+    // 預設 area_id
+    if (!_via_attributes.region.area_id) {
+      _via_attributes.region.area_id = {
+        type: 'text',
+        description: '區域編號',
+        default_value: ''
+      };
+    }
+    // 預設 edge_num
+    if (!_via_attributes.region.edge_num) {
+      _via_attributes.region.edge_num = {
+        type: 'text',
+        description: '邊數',
+        default_value: ''
+      };
+    }
+
   // initialize region canvas 2D context
   _via_init_reg_canvas_context();
 
@@ -367,6 +391,11 @@ function _via_init() {
   attribute_update_panel_set_active_button();
   annotation_editor_set_active_button();
   init_message_panel();
+
+  // Automatically toggle annotation editor for all regions after 300ms
+  setTimeout(function() {
+    annotation_editor_toggle_all_regions_editor();
+  }, 300);
 
   // run attached sub-modules (if any)
   // e.g. demo modules
