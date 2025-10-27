@@ -256,7 +256,7 @@ var _via_preload_img_promise_list   = [];
 // via settings
 var _via_settings = {};
 _via_settings.ui  = {};
-_via_settings.ui.annotation_editor_height   = 25; // in percent of the height of browser window
+_via_settings.ui.annotation_editor_height   = 20; // in percent of the height of browser window
 _via_settings.ui.annotation_editor_fontsize = 0.8;// in rem
 _via_settings.ui.leftsidebar_width          = 18;  // in rem
 
@@ -316,6 +316,7 @@ var VIA_COCO_EXPORT_ATTRIBUTE_TYPE = [VIA_ATTRIBUTE_TYPE.DROPDOWN,
 
 //全域變數，存放 roi-config-name
 var roiConfigName = "";
+var scenario = "";
 
 //
 // Data structure to store metadata about file and regions
@@ -350,6 +351,30 @@ function _via_init() {
   // initialize default project
   project_init_default_project();
 
+  // initialize default attributes if not already present
+  if (typeof _via_attributes === 'undefined') {
+      _via_attributes = { region: {}, file: {} };
+    }
+    if (!_via_attributes.region) {
+      _via_attributes.region = {};
+    }
+    // 預設 area_id
+    if (!_via_attributes.region.area_id) {
+      _via_attributes.region.area_id = {
+        type: 'text',
+        description: '區域編號',
+        default_value: ''
+      };
+    }
+    // 預設 edge_num
+    if (!_via_attributes.region.edge_num) {
+      _via_attributes.region.edge_num = {
+        type: 'text',
+        description: '邊數',
+        default_value: ''
+      };
+    }
+
   // initialize region canvas 2D context
   _via_init_reg_canvas_context();
 
@@ -367,6 +392,11 @@ function _via_init() {
   annotation_editor_set_active_button();
   init_message_panel();
 
+  // Automatically toggle annotation editor for all regions after 300ms
+  setTimeout(function() {
+    annotation_editor_toggle_all_regions_editor();
+  }, 300);
+
   // run attached sub-modules (if any)
   // e.g. demo modules
   if (typeof _via_load_submodules === 'function') {
@@ -379,7 +409,8 @@ function _via_init() {
   // 新增：頁面初始化時自動取得 screenshot_url
   const queryParams = getQueryParams();
   const screenshotUrl = queryParams.screenshot_url;
-  roiConfigName = queryParams['roi-config-name'] || ""; // 取得 roi-config-name 參數
+  roiConfigName = queryParams['roi_config_name'] || ""; // 取得 roi-config-name 參數
+  scenario = queryParams['scenario'] || ""; // 取得 scenario 參數
   if (screenshotUrl) {
     // 驗證 URL 是否有效且為圖片格式
     if (isValidImageUrl(screenshotUrl)) {
@@ -10233,14 +10264,15 @@ function post_roi_to_agent() {
       }
 
       // 定義後端 API 的 URL
-      var url = 'http://localhost:8080/api/update_roi_config/';
-
-      if (roiConfigName) {
-        url += encodeURIComponent(roiConfigName);
-      } else {
+      if (!roiConfigName) {
         show_message("ROI config name is not specified in URL query string.");
         return;
       }
+      if (!scenario) {
+        show_message("Scenario is not specified in URL query string.");
+        return;
+      }
+      var url = `http://localhost:8080/api/update_roi_config/${encodeURIComponent(roiConfigName)}/${encodeURIComponent(scenario)}`;
 
       // 發送 POST 請求
       fetch(url, {
@@ -10248,27 +10280,24 @@ function post_roi_to_agent() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(roiData)
       })
-        .then(response => {
-          // 檢查回應是否成功
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(result => {
-          // 成功處理回應
-          show_message("SUCCESS POST ROI DATA", result);
-          console.log('Success:', result);
-        })
-        .catch(error => {
-          // 處理錯誤
-          show_message("ERROR POST ROI DATA", error);
-          console.error('Error:', error);
-        });
+        .then(async response => {
+              const result = await response.json();
+              if (!response.ok) {
+                // 顯示後端回傳的錯誤訊息
+                show_message("後端錯誤：" + (result.error || response.status));
+                throw new Error(result.error || response.status);
+              }
+              show_message("SUCCESS POST ROI DATA; ROI FILE PATH:" +  result.yaml_path);
+              console.log('Success:', result);
+            })
+            .catch(error => {
+              show_message("ERROR POST ROI DATA; ROI FILE PATH:" +  result.yaml_path);
+              console.error('Error:', error);
+            });
     })
     .catch(error => {
       // 處理 pack_via_metadata 的錯誤
-      show_message("ERROR PACKING METADATA", error);
+      show_message("ERROR PACKING METADATA" + JSON.stringify(error));
       console.error('Error:', error);
     });
 }
